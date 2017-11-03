@@ -83,7 +83,7 @@ class Search extends Component {
           <ol className="books-grid">
           {this.state.books.map((book) => (
             <li key={book.id}>
-              <div className={book.shelf}>
+              <div className={book.shelf ? 'added-to-shelf' : ''}>
                 <div className="book">
                   <div className="book-top">
                     <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
@@ -94,7 +94,6 @@ class Search extends Component {
                   </div>
                   <div className="book-title">{book.title}</div>
                   <div className="book-authors">{book.authors[0]}</div>
-                  <div className="book-category">{book.shelf ? 'Book added to your shelf!' : ''}</div>
                 </div>
               </div>
             </li>

@@ -180,3 +180,20 @@ body, .app {
   position: absolute;
   left: calc(50% - 83px);
 }
+.added-to-shelf {
+  position: relative;
+}
+.added-to-shelf:after {
+  z-index: 10;
+  display: block;
+  position: absolute;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  content: "BOOK ADDED TO YOUR SHELF";
+  color: #fff;
+  padding: 1em;
+  text-align: center;
+}
