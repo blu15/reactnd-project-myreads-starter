@@ -1,18 +1,21 @@
 import React, { Component } from 'react'
-import * as BooksAPI from './BooksAPI'
+import PropTypes from 'prop-types'
 
 class BookSelfChanger extends Component {
-  changeShelf = (book, shelf) => {
-    BooksAPI.update(book, shelf)
-    this.setState({ value: shelf })
-  }
+  static propTypes = {
+    book: PropTypes.object.isRequired,
+    onUpdateBookShelf: PropTypes.func.isRequired,
+  };
 
   render() {
-    const { book } = this.props
+    const { book, onUpdateBookShelf } = this.props
     return (
       <div className="book-shelf-changer">
         <select
-          onChange={(event) => this.changeShelf(book, event.target.value)} >
+          onChange={(event) => onUpdateBookShelf(book, event.target.value)}
+          value={book.shelf ? book.shelf : "none"}
+        >
+
           <option value="none" disabled>Move to...</option>
           <option value="currentlyReading">Currently Reading</option>
           <option value="wantToRead">Want to Read</option>

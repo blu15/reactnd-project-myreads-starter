@@ -1,10 +1,43 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
-import escapeRegExp from 'escape-string-regexp'
 import * as BooksAPI from './BooksAPI'
 import BookSelfChanger from './BookSelfChanger'
+import PropTypes from 'prop-types'
 
 class Search extends Component {
+
+  static propTypes = {
+    books: PropTypes.array.isRequired,
+    updateBookShelf: PropTypes.func.isRequired,
+  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      books: [],
+      message: '',
+    };
+  }
+
+  searchBooks = (query) => {
+    BooksAPI.search(query, 50)
+      .then((books) => {
+        const booksNotOnMyReads = books.filter(book => this.props.books.some(b => b.id !== book.id));
+        this.setState({ books: [...booksNotOnMyReads], message: '' });
+      })
+      .catch((err) => {
+        this.setState({ books: [], message: 'No book found.' });
+      });
+
+  }
+
+  handleSubmit = (event) => {
+    if (!event.target.value) {
+      this.setState({ books: [], message: '' });
+    } else {
+      this.searchBooks(event.target.value.trim());
+    }
+  }
 
   state = {
     query: ''
@@ -18,23 +51,11 @@ class Search extends Component {
     this.setState({ query: '' })
   }
 
-  changeShelf = (book, shelf) => {
-    BooksAPI.update(book, shelf)
-  }
-
   render() {
-    const { books } = this.props
+    const { updateBookShelf } = this.props
     const { query } = this.state
 
-    let showingBooks
-    if (query) {
-      const match = new RegExp(escapeRegExp(query), 'i')
-      showingBooks = books.filter((book) => match.test(book.title) || match.test(book.authors[0]))
-    } else {
-      showingBooks = books
-    }
-
-    // showingBooks.sort(sortBy('title'))
+    console.log(this.state.books)
 
     return (
       <div className="search-books">
@@ -44,37 +65,37 @@ class Search extends Component {
             className='close-search'
           >Close</Link>
           <div className="search-books-input-wrapper">
-            {/*
-              NOTES: The search from BooksAPI is limited to a particular set of search terms.
-              You can find these search terms here:
-              https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
-
-              However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-              you don't find a specific author or title. Every search is limited by search terms.
-            */}
             <input
             type='text'
             placeholder='Search by title or author'
             value={query}
-            onChange={(event) => this.updateQuery(event.target.value)}
+            onChange={this.handleSubmit}
           />
 
           </div>
         </div>
         <div className="search-books-results">
+          {this.state.message &&
+            <h2 className="search-no-results-msg">
+              {this.state.message}
+            </h2>
+          }
           <ol className="books-grid">
-          {showingBooks.map((book) => (
+          {this.state.books.map((book) => (
             <li key={book.id}>
-              <div className="book">
-                <div className="book-top">
-                  <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
-                  <BookSelfChanger
-                    book={book}
-                  />
+              <div className={book.shelf}>
+                <div className="book">
+                  <div className="book-top">
+                    <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
+                    <BookSelfChanger
+                      book={book}
+                      onUpdateBookShelf={updateBookShelf}
+                    />
+                  </div>
+                  <div className="book-title">{book.title}</div>
+                  <div className="book-authors">{book.authors[0]}</div>
+                  <div className="book-category">{book.shelf ? 'Book added to your shelf!' : ''}</div>
                 </div>
-                <div className="book-title">{book.title}</div>
-                <div className="book-authors">{book.authors[0]}</div>
-                <div className="book-category">{book.shelf}</div>
               </div>
             </li>
           ))}

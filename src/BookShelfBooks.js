@@ -4,39 +4,47 @@ import BookSelfChanger from './BookSelfChanger'
 
 class BookShelfBooks extends Component {
   static propTypes = {
-    books: PropTypes.array.isRequired
+    books: PropTypes.array.isRequired,
+    updateBookShelf: PropTypes.func.isRequired,
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      books: [],
+      message: '',
+    };
   }
 
   render() {
-    const { books, shelf } = this.props
+    const { books, shelf, updateBookShelf, shelfTitle } = this.props
 
     let currentShelf
-    if (shelf) {
-      currentShelf = books.filter((booksCurrentlyReading) => booksCurrentlyReading.shelf === shelf)
-    } else {
-      currentShelf = books.filter((booksCurrentlyReading) => booksCurrentlyReading.shelf === 'currentlyReading')
-    }
-    console.log(shelf);
+    currentShelf = books.filter((booksOnCurrentShelf) => booksOnCurrentShelf.shelf === shelf)
 
 
     return (
-      <div className="bookshelf-books">
-        <ol className="books-grid">
-          {currentShelf.map((book) => (
-            <li key={book.id}>
-              <div className="book">
-                <div className="book-top">
-                  <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
-                  <BookSelfChanger
-                    book={book}
-                  />
+      <div className="bookshelf">
+        <h2 className="bookshelf-title">{shelfTitle}</h2>
+        <div className="bookshelf-books">
+          <ol className="books-grid">
+            {currentShelf.map((book) => (
+              <li key={book.id}>
+                <div className="book">
+                  <div className="book-top">
+                    <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
+                    <BookSelfChanger
+                      book={book}
+                      onUpdateBookShelf={updateBookShelf}
+                    />
+                  </div>
+                  <div className="book-title">{book.title}</div>
+                  <div className="book-authors">{book.authors ? book.authors.join(', ') : book.author}</div>
                 </div>
-                <div className="book-title">{book.title}</div>
-                <div className="book-authors">{book.authors[0]}</div>
-              </div>
-            </li>
-          ))}
-        </ol>
+              </li>
+            ))}
+          </ol>
+        </div>
       </div>
     )
   }

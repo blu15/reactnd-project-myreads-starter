@@ -1,12 +1,18 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types';
 import BookShelfBooks from './BookShelfBooks'
 
 
 class ListBooks extends Component {
 
+  static propTypes = {
+    books: PropTypes.array.isRequired,
+    updateBookShelf: PropTypes.func.isRequired,
+  };
+
   render() {
-    const { books } = this.props
+    const { books, updateBookShelf } = this.props
     console.log(books)
     return (
       <div className="list-books">
@@ -15,27 +21,24 @@ class ListBooks extends Component {
         </div>
         <div className="list-books-content">
           <div>
-            <div className="bookshelf">
-              <h2 className="bookshelf-title">Currently Reading</h2>
               <BookShelfBooks
                 books={books}
                 shelf='currentlyReading'
+                shelfTitle='Currently Reading'
+                updateBookShelf={updateBookShelf}
               />
-            </div>
-            <div className="bookshelf">
-              <h2 className="bookshelf-title">Want to Read</h2>
               <BookShelfBooks
                 books={books}
                 shelf='wantToRead'
+                shelfTitle='Want to Read'
+                updateBookShelf={updateBookShelf}
               />
-            </div>
-            <div className="bookshelf">
-              <h2 className="bookshelf-title">Read</h2>
               <BookShelfBooks
                 books={books}
                 shelf='read'
+                shelfTitle='Read'
+                updateBookShelf={updateBookShelf}
               />
-            </div>
           </div>
         </div>
         <div className="open-search">
