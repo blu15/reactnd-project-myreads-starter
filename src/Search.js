@@ -16,46 +16,34 @@ class Search extends Component {
     this.state = {
       books: [],
       message: '',
+      query: ''
     };
   }
 
   searchBooks = (query) => {
     BooksAPI.search(query, 50)
       .then((books) => {
-        const booksNotOnMyReads = books.filter(book => this.props.books.some(b => b.id !== book.id));
+        const booksNotOnMyReads = books.filter(book => this.props.books.some(bk => bk.id !== book.id));
         this.setState({ books: [...booksNotOnMyReads], message: '' });
       })
       .catch((err) => {
-        this.setState({ books: [], message: 'No book found.' });
+        this.setState({ books: [], message: 'Unfortunately, we don\'t have the book you are looking for.' });
       });
 
   }
 
   handleSubmit = (event) => {
+    this.setState({ query: event.target.value.trim() })
     if (!event.target.value) {
-      this.setState({ books: [], message: '' });
+      this.setState({ books: [], message: '' })
     } else {
-      this.searchBooks(event.target.value.trim());
+      this.searchBooks(event.target.value.trim())
     }
-  }
-
-  state = {
-    query: ''
-  }
-
-  updateQuery = (query) => {
-    this.setState({ query: query.trim() })
-  }
-
-  clearQuery = () => {
-    this.setState({ query: '' })
   }
 
   render() {
     const { updateBookShelf } = this.props
     const { query } = this.state
-
-    console.log(this.state.books)
 
     return (
       <div className="search-books">
@@ -76,7 +64,7 @@ class Search extends Component {
         </div>
         <div className="search-books-results">
           {this.state.message &&
-            <h2 className="search-no-results-msg">
+            <h2 className="no-results">
               {this.state.message}
             </h2>
           }

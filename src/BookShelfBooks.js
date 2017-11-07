@@ -22,7 +22,6 @@ class BookShelfBooks extends Component {
     let currentShelf
     currentShelf = books.filter((booksOnCurrentShelf) => booksOnCurrentShelf.shelf === shelf)
 
-
     return (
       <div className="bookshelf">
         <h2 className="bookshelf-title">{shelfTitle}</h2>
