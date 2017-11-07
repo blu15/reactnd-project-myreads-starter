@@ -23,8 +23,8 @@ class Search extends Component {
   searchBooks = (query) => {
     BooksAPI.search(query, 50)
       .then((books) => {
-        const booksNotOnMyReads = books.filter(book => this.props.books.some(bk => bk.id !== book.id));
-        this.setState({ books: [...booksNotOnMyReads], message: '' });
+        const bookNotOnList = books.filter(book => this.props.books.some(bk => bk.id !== book.id));
+        this.setState({ books: [...bookNotOnList], message: '' });
       })
       .catch((err) => {
         this.setState({ books: [], message: 'Unfortunately, we don\'t have the book you are looking for.' });
@@ -81,7 +81,7 @@ class Search extends Component {
                     />
                   </div>
                   <div className="book-title">{book.title}</div>
-                  <div className="book-authors">{book.authors[0]}</div>
+                  <div className="book-authors">{book.authors ? book.authors.join(', ') : book.author}</div>
                 </div>
               </div>
             </li>
