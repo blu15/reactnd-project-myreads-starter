@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import { Route } from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
 import ListBooks from './ListBooks'
@@ -19,11 +19,11 @@ class BooksApp extends Component {
   // Update via books API, and set the State.
   updateBookShelf = (book, shelf) => {
     BooksAPI.update(book, shelf).then(() => {
-      book.shelf = shelf;
+      book.shelf = shelf
       this.setState(state => ({
         books: state.books.filter(bk => bk.id !== book.id).concat([book]),
-      }));
-    });
+      }))
+    })
   }
 
   searchBooks = (query) => {
@@ -34,7 +34,7 @@ class BooksApp extends Component {
       })
       .catch((err) => {
         this.setState({ searchResults: [], message: 'Unfortunately, we don\'t have the book you are looking for.' })
-      });
+      })
   }
 
   render() {

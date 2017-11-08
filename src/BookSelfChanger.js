@@ -5,7 +5,7 @@ class BookSelfChanger extends Component {
   static propTypes = {
     book: PropTypes.object.isRequired,
     onUpdateBookShelf: PropTypes.func.isRequired,
-  };
+  }
 
   render() {
     const { book, onUpdateBookShelf } = this.props

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import BookSelfChanger from './BookSelfChanger'
 import PropTypes from 'prop-types'
@@ -10,24 +10,24 @@ class Search extends Component {
     updateBookShelf: PropTypes.func.isRequired,
     searchResults: PropTypes.array,
     searchBooks: PropTypes.func.isRequired
-  };
+  }
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       books: [],
       message: '',
       query: ''
-    };
+    }
   }
 
+  // Function that sets the query state value, and the book state value.
+  // If the query value is empty, the books state array will also be empty, otherwise
+  // the query is passed into the searchBooks() function wich updates the searchResults state array
+  // from values returned by the searchBooks function on App.js.
   handleSubmit = (event) => {
     this.setState({ query: event.target.value.trim() })
-    if (!event.target.value) {
-      this.setState({ books: [], message: '' })
-    } else {
-      this.props.searchBooks(event.target.value.trim())
-    }
+    !event.target.value ? this.setState({ books: [], message: '' }) : this.props.searchBooks(event.target.value.trim())
   }
 
   render() {
@@ -38,7 +38,7 @@ class Search extends Component {
     let findBook = allBooks.reduce( (library, book) => {
         library[book.id] = book
         return library
-    }, {});
+    }, {})
     // Create an array based on the searchResults and add the shelf by finding
     // the right book (by ID) from the allBooks array (which has the missing shelf)
     let b = searchResults.map((book)=> {
@@ -46,8 +46,8 @@ class Search extends Component {
         if (bookWithShelf) {
             book.shelf = bookWithShelf.shelf
         }
-        return book;
-    });
+        return book
+    })
 
     return (
       <div className="search-books">

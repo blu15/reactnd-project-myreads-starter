@@ -9,11 +9,11 @@ class BookShelfBooks extends Component {
   }
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       books: [],
       message: '',
-    };
+    }
   }
 
   render() {
