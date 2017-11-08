@@ -19,8 +19,7 @@ class BookShelfBooks extends Component {
   render() {
     const { books, shelf, updateBookShelf, shelfTitle } = this.props
 
-    let currentShelf
-    currentShelf = books.filter((booksOnCurrentShelf) => booksOnCurrentShelf.shelf === shelf)
+    const currentShelf = books.filter((booksOnCurrentShelf) => booksOnCurrentShelf.shelf === shelf)
 
     return (
       <div className="bookshelf">

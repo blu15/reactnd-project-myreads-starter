@@ -8,7 +8,8 @@ import './App.css'
 class BooksApp extends Component {
   state = {
     books: [],
-    searchResults: []
+    searchResults: [],
+    message: ''
   }
   componentDidMount() {
     BooksAPI.getAll().then((books) => {
@@ -29,11 +30,9 @@ class BooksApp extends Component {
   searchBooks = (query) => {
     BooksAPI.search(query, 20)
       .then((searchResults) => {
-        let books = !searchResults.length ? [] : searchResults
-        this.setState({ searchResults: books, message: '' })
-      })
-      .catch((err) => {
-        this.setState({ searchResults: [], message: 'Unfortunately, we don\'t have the book you are looking for.' })
+        let error = !searchResults || searchResults.error || !searchResults.length
+        let books = error ? [] : searchResults
+        error ? this.setState({ searchResults: [], message: 'Unfortunately, we don\'t have the book you are looking for.' }) : this.setState({ searchResults: books, message: '' })
       })
   }
 
@@ -53,6 +52,7 @@ class BooksApp extends Component {
               updateBookShelf={this.updateBookShelf}
               searchResults={this.state.searchResults}
               searchBooks={this.searchBooks}
+              message={this.state.message}
             />
           )}/>
         </div>

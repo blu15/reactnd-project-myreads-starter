@@ -9,14 +9,13 @@ class Search extends Component {
     allBooks: PropTypes.array.isRequired,
     updateBookShelf: PropTypes.func.isRequired,
     searchResults: PropTypes.array,
-    searchBooks: PropTypes.func.isRequired
+    searchBooks: PropTypes.func.isRequired,
+    message: PropTypes.string
   }
 
   constructor(props) {
     super(props)
     this.state = {
-      books: [],
-      message: '',
       query: ''
     }
   }
@@ -26,15 +25,15 @@ class Search extends Component {
   // the query is passed into the searchBooks() function wich updates the searchResults state array
   // from values returned by the searchBooks function on App.js.
   handleSubmit = (event) => {
-    this.setState({ query: event.target.value.trim() })
-    !event.target.value ? this.setState({ books: [], message: '' }) : this.props.searchBooks(event.target.value.trim())
+    this.setState({ query: event.target.value })
+    this.props.searchBooks(event.target.value.trim())
   }
 
   render() {
-    const { updateBookShelf, searchResults, allBooks } = this.props
-    const { query, message } = this.state
+    const { updateBookShelf, searchResults, allBooks, message } = this.props
+    const { query } = this.state
 
-    // make a new array with book ID as key
+    // Make a new array with book ID as key
     let findBook = allBooks.reduce( (library, book) => {
         library[book.id] = book
         return library
@@ -73,7 +72,7 @@ class Search extends Component {
             </h2>
           }
           <ol className="books-grid">
-          {b.map((book) => (
+          {b && b.map((book) => (
             <li key={book.id}>
               <div className="book-wrapper">
               {book.shelf &&
