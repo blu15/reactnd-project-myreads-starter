@@ -7,7 +7,8 @@ import './App.css'
 
 class BooksApp extends Component {
   state = {
-    books: []
+    books: [],
+    searchResults: []
   }
   componentDidMount() {
     BooksAPI.getAll().then((books) => {
@@ -19,11 +20,21 @@ class BooksApp extends Component {
   updateBookShelf = (book, shelf) => {
     BooksAPI.update(book, shelf).then(() => {
       book.shelf = shelf;
-
       this.setState(state => ({
         books: state.books.filter(bk => bk.id !== book.id).concat([book]),
       }));
     });
+  }
+
+  searchBooks = (query) => {
+    BooksAPI.search(query, 20)
+      .then((searchResults) => {
+        let books = !searchResults.length ? [] : searchResults
+        this.setState({ searchResults: books, message: '' })
+      })
+      .catch((err) => {
+        this.setState({ searchResults: [], message: 'Unfortunately, we don\'t have the book you are looking for.' })
+      });
   }
 
   render() {
@@ -38,8 +49,10 @@ class BooksApp extends Component {
           )}/>
           <Route path='/search' render={() => (
             <Search
-              books={this.state.books}
+              allBooks={this.state.books}
               updateBookShelf={this.updateBookShelf}
+              searchResults={this.state.searchResults}
+              searchBooks={this.searchBooks}
             />
           )}/>
         </div>

@@ -179,20 +179,27 @@ body, .app {
 .no-results {
   text-align: center;
 }
-.added-to-shelf {
+.book-wrapper {
   position: relative;
 }
-.added-to-shelf:after {
-  z-index: 10;
-  display: block;
+.ribbon {
   position: absolute;
-  height: 100%;
-  top: 0;
-  left: 0;
   right: 0;
-  background: rgba(0, 0, 0, 0.7);
-  content: "BOOK ADDED TO YOUR SHELF";
-  color: #fff;
-  padding: 1em;
-  text-align: center;
+  top: 0;
+  z-index: 1000;
+}
+.ribbon span {
+  display: block;
+  height: 140px;
+  width: 140px;
+  text-indent: -9000px;
+}
+.ribbon span.currentlyReading {
+  background: url('./icons/ribbon-reading.png') no-repeat;
+}
+.ribbon span.wantToRead {
+  background: url('./icons/ribbon-wanted.png') no-repeat;
+}
+.ribbon span.read {
+  background: url('./icons/ribbon-read.png') no-repeat;
 }

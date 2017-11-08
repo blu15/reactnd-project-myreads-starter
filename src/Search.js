@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
-import * as BooksAPI from './BooksAPI'
 import BookSelfChanger from './BookSelfChanger'
 import PropTypes from 'prop-types'
 
 class Search extends Component {
 
   static propTypes = {
-    books: PropTypes.array.isRequired,
+    allBooks: PropTypes.array.isRequired,
     updateBookShelf: PropTypes.func.isRequired,
+    searchResults: PropTypes.array,
+    searchBooks: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -20,30 +21,33 @@ class Search extends Component {
     };
   }
 
-  searchBooks = (query) => {
-    BooksAPI.search(query, 50)
-      .then((books) => {
-        const bookNotOnList = books.filter(book => this.props.books.some(bk => bk.id !== book.id));
-        this.setState({ books: [...bookNotOnList], message: '' });
-      })
-      .catch((err) => {
-        this.setState({ books: [], message: 'Unfortunately, we don\'t have the book you are looking for.' });
-      });
-
-  }
-
   handleSubmit = (event) => {
     this.setState({ query: event.target.value.trim() })
     if (!event.target.value) {
       this.setState({ books: [], message: '' })
     } else {
-      this.searchBooks(event.target.value.trim())
+      this.props.searchBooks(event.target.value.trim())
     }
   }
 
   render() {
-    const { updateBookShelf } = this.props
-    const { query } = this.state
+    const { updateBookShelf, searchResults, allBooks } = this.props
+    const { query, message } = this.state
+
+    // make a new array with book ID as key
+    let findBook = allBooks.reduce( (library, book) => {
+        library[book.id] = book
+        return library
+    }, {});
+    // Create an array based on the searchResults and add the shelf by finding
+    // the right book (by ID) from the allBooks array (which has the missing shelf)
+    let b = searchResults.map((book)=> {
+        var bookWithShelf = findBook[book.id]
+        if (bookWithShelf) {
+            book.shelf = bookWithShelf.shelf
+        }
+        return book;
+    });
 
     return (
       <div className="search-books">
@@ -63,15 +67,18 @@ class Search extends Component {
           </div>
         </div>
         <div className="search-books-results">
-          {this.state.message &&
+          {message &&
             <h2 className="no-results">
-              {this.state.message}
+              {message}
             </h2>
           }
           <ol className="books-grid">
-          {this.state.books.map((book) => (
+          {b.map((book) => (
             <li key={book.id}>
-              <div className={book.shelf ? 'added-to-shelf' : ''}>
+              <div className="book-wrapper">
+              {book.shelf &&
+                <div className="ribbon"><span className={book.shelf}>{book.shelf}</span></div>
+              }
                 <div className="book">
                   <div className="book-top">
                     <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
