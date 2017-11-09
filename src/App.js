@@ -28,6 +28,13 @@ class BooksApp extends Component {
   }
 
   searchBooks = (query) => {
+    // Avoid returning a 403 from the API.
+    if (!query){
+      this.setState({
+        searchResults: []
+      });
+      return;
+    }
     BooksAPI.search(query, 20)
       .then((searchResults) => {
         let error = !searchResults || searchResults.error || !searchResults.length
